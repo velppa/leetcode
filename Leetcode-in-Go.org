@@ -1,5 +1,113 @@
 #+TITLE: Solving Leetcode problems in Golang
 
+* TODO 4. Median of Two Sorted Arrays   :Hard:
+:PROPERTIES:
+:CREATED:  <2023-04-01 Sat>
+:END:
+
+[[https://leetcode.com/problems/median-of-two-sorted-arrays/description/][Median of Two Sorted Arrays - LeetCode]]
+
+Given two sorted arrays nums1 and nums2 of size m and n respectively,
+return the median of the two sorted arrays.
+
+The overall run time complexity should be O(log (m+n)).
+
+Example 1:
+
+Input: nums1 = [1,3], nums2 = [2]
+Output: 2.00000
+Explanation: merged array = [1,2,3] and median is 2.
+
+Example 2:
+
+Input: nums1 = [1,2], nums2 = [3,4]
+Output: 2.50000
+Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+
+Constraints:
+
+- nums1.length = m
+- nums2.length = n
+- 0 <= m <= 1000
+- 0 <= n <= 1000
+- 1 <= m + n <= 2000
+- -106 <= nums1[i], nums2[i] <= 106
+
+
+** Naive solution with O(m+n) complexity
+Join arrays preserving the order, then calculate the median.
+Complexity is O(m+n) as we loop over both arrays once.
+
+Snippet at ~/Developer/src/github.com/velppa/go-playground/at-2023-04-01-000716/snippet.go.
+
+https://leetcode.com/problems/median-of-two-sorted-arrays/submissions/925598775/
+
+Apr 01, 2023 00:22
+Runtime 16 ms Beats 54.10%
+Memory 5.6 MB Beats 40.69%
+
+
+#+begin_src go
+// -*- mode:go;mode:go-playground -*-
+// snippet of code @ 2023-04-01 00:07:16
+package main
+
+import (
+	"fmt"
+)
+
+// Merge merges two sorted slices into final sorted slice.
+func merge(s1, s2 []int) []int {
+	result := make([]int, len(s1)+len(s2))
+	i1, i2 := 0, 0 // current pointers to position in s1 and s2
+	for i := range result {
+		// checking if pointers went beyond the limits
+		if i1 >= len(s1) {
+			result[i] = s2[i2]
+			i2++
+			continue
+		}
+		if i2 >= len(s2) {
+			result[i] = s1[i1]
+			i1++
+			continue
+		}
+		// picking the least value and advancing the pointer
+		if s1[i1] < s2[i2] {
+			result[i] = s1[i1]
+			i1++
+		} else {
+			result[i] = s2[i2]
+			i2++
+		}
+	}
+	return result
+}
+
+// Median calculates median of a sorted slice.
+func median(s []int) float64 {
+	if len(s)%2 == 0 { // length is even
+		return float64(float64(s[len(s)/2]+s[len(s)/2-1]) / 2)
+	}
+	return float64(s[len(s)/2])
+}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+	return median(merge(nums1, nums2))
+}
+
+func main() {
+	s1 := []int{1, 2}
+	s2 := []int{3, 4}
+	merged := merge(s1, s2)
+	median := median(merged)
+	fmt.Println("Results:", merged, " ", median)
+}
+#+end_src
+
+#+RESULTS:
+: Hello world
+
 * DONE 8. String to Integer (atoi)                                   :Medium:
 CLOSED: [2021-07-11 Sun 19:48]
 <2021-07-11 Sun>
